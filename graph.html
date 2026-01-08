@@ -547,19 +547,19 @@
 
         <div class="panel-body">
             <!-- Overview Tab -->
-            <div id="tab-overview" class="tab-content active" role="tabpanel" aria-labelledby="panel-tab-overview">
+            <div id="tab-overview" class="tab-content active" role="tabpanel" aria-labelledby="panel-tab-overview" data-tab="overview">
                 <div id="node-stats" class="stats-row"></div>
                 <div id="node-questions" class="questions-preview"></div>
                 <p id="node-desc" class="node-description" hidden></p>
             </div>
 
             <!-- Companies Tab -->
-            <div id="tab-companies" class="tab-content" role="tabpanel" aria-labelledby="panel-tab-companies" hidden>
+            <div id="tab-companies" class="tab-content" role="tabpanel" aria-labelledby="panel-tab-companies" data-tab="companies" hidden>
                 <div id="node-companies" class="top-companies"></div>
             </div>
 
             <!-- Related Tab -->
-            <div id="tab-related" class="tab-content" role="tabpanel" aria-labelledby="panel-tab-related" hidden>
+            <div id="tab-related" class="tab-content" role="tabpanel" aria-labelledby="panel-tab-related" data-tab="related" hidden>
                 <div id="node-used-by"></div>
                 <div id="node-related" class="related-nodes"></div>
             </div>
@@ -628,6 +628,7 @@
     </div>
 
     <script src="data/graph_data.js?v=26"></script>
+    <script src="js/sidebar.js?v=26"></script>
     <script src="js/app.js?v=26"></script>
     <script>
         if ('serviceWorker' in navigator) {

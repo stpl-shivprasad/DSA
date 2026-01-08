@@ -842,14 +842,14 @@
         </div>
 
         <div class="panel-body">
-            <div class="tab-content active" id="detail-overview">
+            <div class="tab-content active" id="detail-overview" data-tab="overview">
                 <p id="detail-description" class="detail-description"></p>
                 <button type="button" class="detail-open-btn" id="detail-open-full">📖 Open Full Topic Page →</button>
             </div>
-            <div class="tab-content" id="detail-companies-section">
+            <div class="tab-content" id="detail-companies-section" data-tab="companies">
                 <div class="detail-companies" id="detail-companies-list"></div>
             </div>
-            <div class="tab-content" id="detail-related-section">
+            <div class="tab-content" id="detail-related-section" data-tab="related">
                 <!-- Populated by JS -->
             </div>
         </div>
@@ -862,6 +862,7 @@
 
     <script src="data/graph_data.js?v=26"></script>
     <script src="data/periodic-table-config.js?v=26"></script>
+    <script src="js/sidebar.js?v=26"></script>
     <script src="js/periodic-table.js?v=26"></script>
     <script>
         if ('serviceWorker' in navigator) {
