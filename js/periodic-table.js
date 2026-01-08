@@ -1226,36 +1226,7 @@ function focusTopicById(rawId, { openPanel = true } = {}) {
     }
 }
 
-// Tab switching in detail panel
-document.querySelectorAll('.panel-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        setActiveDetailTab(tab.dataset.tab);
-    });
-
-    tab.addEventListener('keydown', (e) => {
-        const tabs = Array.from(document.querySelectorAll('.panel-tab'));
-        const currentIndex = tabs.indexOf(tab);
-        if (currentIndex < 0) return;
-
-        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-            e.preventDefault();
-            const delta = e.key === 'ArrowRight' ? 1 : -1;
-            const next = tabs[(currentIndex + delta + tabs.length) % tabs.length];
-            next?.focus();
-            setActiveDetailTab(next?.dataset.tab);
-        }
-        if (e.key === 'Home') {
-            e.preventDefault();
-            tabs[0]?.focus();
-            setActiveDetailTab(tabs[0]?.dataset.tab);
-        }
-        if (e.key === 'End') {
-            e.preventDefault();
-            tabs[tabs.length - 1]?.focus();
-            setActiveDetailTab(tabs[tabs.length - 1]?.dataset.tab);
-        }
-    });
-});
+// Tab switching in detail panel - now handled by unified sidebar.js component
 
 // =====================
 // VIEW MODES

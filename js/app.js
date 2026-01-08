@@ -1642,37 +1642,7 @@ window.closeQuiz = closeQuiz;
 window.toggleMinimap = toggleMinimap;
 
 // ============================================================
-// Panel Tab Switching
-// ============================================================
-document.querySelectorAll('.panel-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        setActivePanelTab(tab.dataset.tab);
-    });
-
-    tab.addEventListener('keydown', (e) => {
-        const tabs = Array.from(document.querySelectorAll('.panel-tab'));
-        const currentIndex = tabs.indexOf(tab);
-        if (currentIndex < 0) return;
-
-        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-            e.preventDefault();
-            const delta = e.key === 'ArrowRight' ? 1 : -1;
-            const next = tabs[(currentIndex + delta + tabs.length) % tabs.length];
-            next?.focus();
-            setActivePanelTab(next?.dataset.tab);
-        }
-        if (e.key === 'Home') {
-            e.preventDefault();
-            tabs[0]?.focus();
-            setActivePanelTab(tabs[0]?.dataset.tab);
-        }
-        if (e.key === 'End') {
-            e.preventDefault();
-            tabs[tabs.length - 1]?.focus();
-            setActivePanelTab(tabs[tabs.length - 1]?.dataset.tab);
-        }
-    });
-});
+// Panel Tab Switching - now handled by unified sidebar.js component
 
 // Render related topics for the Related tab
 function renderRelatedTopics(nodeId) {

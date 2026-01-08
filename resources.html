@@ -632,17 +632,7 @@
             document.querySelectorAll('.resource-card').forEach(c => c.classList.remove('selected'));
         });
 
-        document.querySelectorAll('.panel-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                tab.classList.add('active');
-                document.querySelectorAll('.tab-content').forEach(c => c.hidden = true);
-                const active = document.getElementById(`tab-${tab.dataset.tab}`);
-                if (active) { active.hidden = false; active.classList.add('active'); }
-            });
-        });
-
+        // Tab switching now handled by unified sidebar.js component
         // Event Listeners for Filters
         document.getElementById('category-filter').addEventListener('change', (e) => { currentCategory = e.target.value; renderResources(); });
         document.querySelectorAll('[data-price]').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('[data-price]').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentPrice = btn.dataset.price; renderResources(); }));
