@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Topic - Loading...</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        window.mermaid = mermaid;
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1e3a5f',
+                primaryTextColor: '#ffffff',
+                primaryBorderColor: '#3d5a80',
+                lineColor: '#61dafb',
+                secondaryColor: '#ee6c4d',
+                tertiaryColor: '#98c1d9',
+                fontSize: '14px',
+                fontFamily: 'Inter, system-ui, sans-serif'
+            },
+            flowchart: { curve: 'basis', padding: 10 }
+        });
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#61dafb">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <style>
+        /* Topic Specific Styles */
+        :root {
+            /* Local specific vars mapping to global if needed or keeping local consistency */
+            --bg-code: #1e1e2e;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --error: #f87171;
+        }
+
+        body {
+            line-height: 1.7;
+            overflow-x: hidden;
+            /* Prevent horizontal scroll */
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 15, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--border-color);
+            border-color: var(--accent-cyan);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .header-meta {
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .difficulty-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .difficulty-1,
+        .difficulty-2 {
+            background: #22543d;
+            color: #9ae6b4;
+        }
+
+        .difficulty-3,
+        .difficulty-4 {
+            background: #744210;
+            color: #fbd38d;
+        }
+
+        .difficulty-5,
+        .difficulty-6 {
+            background: #7b341e;
+            color: #feb2b2;
+        }
+
+        .difficulty-7,
+        .difficulty-8,
+        .difficulty-9,
+        .difficulty-10 {
+            background: #742a2a;
+            color: #fc8181;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 80px;
+            width: 250px;
+            flex-shrink: 0;
+            height: fit-content;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .sidebar-nav {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .sidebar-nav h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link:hover {
+            background: rgba(97, 218, 251, 0.1);
+            color: var(--accent-cyan);
+        }
+
+        .nav-link.active {
+            background: rgba(97, 218, 251, 0.15);
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .sidebar-divider {
+            border-top: 1px solid var(--border-color);
+            margin: 0.75rem 0;
+        }
+
+        .content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Sections */
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        /* Definition Section */
+        .definition-simple {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(97, 218, 251, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-cyan);
+        }
+
+        .definition-technical {
+            color: var(--text-secondary);
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .definition-technical::before {
+            content: "Technical: ";
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        /* Steps */
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .step:hover {
+            border-color: var(--accent-cyan);
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .step-why {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            font-style: italic;
+        }
+
+        /* Diagrams */
+        .diagram-container {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .diagram-container .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        .diagram-caption {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Pattern Cards */
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .pattern-card {
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .pattern-card h4 {
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .pattern-card .signal {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .pattern-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .without-it {
+            padding: 0.5rem;
+            background: rgba(248, 113, 113, 0.1);
+            border-radius: 6px;
+            color: var(--error);
+        }
+
+        .with-it {
+            padding: 0.5rem;
+            background: rgba(74, 222, 128, 0.1);
+            border-radius: 6px;
+            color: var(--success);
+        }
+
+        /* Anti-pattern Cards */
+        .antipattern-card {
+            padding: 1.25rem;
+            background: rgba(248, 113, 113, 0.05);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .antipattern-card h4 {
+            color: var(--error);
+            margin-bottom: 0.5rem;
+        }
+
+        .antipattern-card .use-instead {
+            margin-top: 0.5rem;
+            color: var(--success);
+            font-size: 0.9rem;
+        }
+
+        /* Analogy Box */
+        .analogy-box {
+            background: linear-gradient(135deg, rgba(97, 218, 251, 0.1), rgba(238, 108, 77, 0.1));
+            border: 1px solid var(--accent-cyan);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .analogy-title {
+            font-size: 1.2rem;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .analogy-story {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .analogy-connection {
+            color: var(--text-secondary);
+            font-style: italic;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Key Insight */
+        .key-insight {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid var(--success);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            color: var(--success);
+        }
+
+        .key-insight::before {
+            content: "💡 Key Insight: ";
+            font-weight: 600;
+        }
+
+        /* Confusion Cards */
+        .confusion-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .confusion-item {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 3px solid var(--warning);
+        }
+
+        .confusion-item strong {
+            color: var(--warning);
+        }
+
+        .confusion-item p {
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        /* Complexity Table */
+        .complexity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .complexity-table th,
+        .complexity-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .complexity-table th {
+            background: var(--bg-secondary);
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .complexity-table td {
+            color: var(--text-secondary);
+        }
+
+        .complexity-table code {
+            background: rgba(97, 218, 251, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: var(--accent-cyan);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .space-complexity {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .space-complexity strong {
+            color: var(--accent-cyan);
+        }
+
+        /* Code Templates */
+        .code-template {
+            margin-bottom: 2rem;
+        }
+
+        .code-template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-template-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        .code-template-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .code-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0;
+        }
+
+        .code-tab {
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .code-tab.active {
+            background: var(--bg-code);
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+        }
+
+        .code-tab:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        .code-block {
+            position: relative;
+            background: var(--bg-code);
+            border-radius: 0 12px 12px 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-notes {
+            padding: 0.75rem 1rem;
+            background: rgba(97, 218, 251, 0.1);
+            border-top: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .code-notes::before {
+            content: "📝 ";
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
+
+        /* Visual Trace */
+        .trace-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .trace-table th {
+            background: var(--bg-secondary);
+            padding: 0.75rem;
+            text-align: left;
+            color: var(--accent-cyan);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .trace-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .trace-table tr:hover td {
+            background: rgba(97, 218, 251, 0.05);
+        }
+
+        /* Common Mistakes */
+        .mistake-card {
+            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border-left: 4px solid var(--error);
+        }
+
+        .mistake-title {
+            color: var(--error);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .mistake-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 0.75rem 0;
+        }
+
+        .mistake-wrong,
+        .mistake-right {
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .mistake-wrong {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid var(--error);
+        }
+
+        .mistake-wrong::before {
+            content: "❌ Wrong: ";
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+        }
+
+        .mistake-right {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid var(--success);
+        }
+
+        .mistake-right::before {
+            content: "✅ Right: ";
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+        }
+
+        .mistake-explanation {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.75rem;
+        }
+
+        /* Key Takeaways */
+        .takeaways-list {
+            list-style: none;
+        }
+
+        .takeaways-list li {
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .takeaways-list li::before {
+            content: "✓";
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        /* Learning Path */
+        .path-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .path-section h4 {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .path-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .path-item {
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .path-item:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(97, 218, 251, 0.1);
+        }
+
+        .path-item .why {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* No Content State */
+        .no-content {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .no-content h2 {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .no-content p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Meta Bar */
+        .meta-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        .meta-value {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .difficulty-stars {
+            color: var(--warning);
+            letter-spacing: 2px;
+        }
+
+        .companies-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .company-tag {
+            padding: 0.35rem 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .company-tag-more {
+            background: var(--border-color);
+        }
+
+        .freq-badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .freq-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .freq-medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fcd34d;
+        }
+
+        .freq-low {
+            background: rgba(74, 222, 128, 0.2);
+            color: #86efac;
+        }
+
+        /* Interview Questions */
+        .questions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .question-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .question-card:hover {
+            border-color: var(--accent-cyan);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .question-header:hover {
+            background: rgba(97, 218, 251, 0.05);
+        }
+
+        .question-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .question-name a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .question-name a:hover {
+            color: var(--accent-cyan);
+            text-decoration: underline;
+        }
+
+        .question-difficulty {
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .diff-easy {
+            background: rgba(74, 222, 128, 0.2);
+            color: #86efac;
+        }
+
+        .diff-medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fcd34d;
+        }
+
+        .diff-hard {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .question-toggle {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: transform 0.2s;
+        }
+
+        .question-card.expanded .question-toggle {
+            transform: rotate(180deg);
+        }
+
+        .question-details {
+            display: none;
+            padding: 0 1.25rem 1.25rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .question-card.expanded .question-details {
+            display: block;
+        }
+
+        .question-section {
+            margin-top: 1rem;
+        }
+
+        .question-section-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .question-section-content {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .question-companies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .q-company {
+            padding: 0.25rem 0.6rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .question-followups {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .followup-item {
+            background: rgba(97, 218, 251, 0.08);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-cyan);
+            overflow: hidden;
+        }
+
+        .followup-question {
+            padding: 0.6rem 0.75rem;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .followup-question::before {
+            content: "→ ";
+        }
+
+        .followup-question::after {
+            content: "+";
+            font-size: 1.1rem;
+            opacity: 0.6;
+        }
+
+        .followup-item.expanded .followup-question::after {
+            content: "−";
+        }
+
+        .followup-answer {
+            padding: 0 0.75rem 0.6rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: none;
+            border-top: 1px solid rgba(97, 218, 251, 0.1);
+            padding-top: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .followup-item.expanded .followup-answer {
+            display: block;
+        }
+
+        .question-sources {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .source-link a {
+            padding: 0.3rem 0.6rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .source-link a:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* References */
+        .references-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .ref-category {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 1.25rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .ref-category h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .ref-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .ref-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg-card);
+            border-radius: 6px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .ref-link:hover {
+            background: rgba(97, 218, 251, 0.1);
+            color: var(--accent-cyan);
+        }
+
+        .ref-link::before {
+            content: "🔗";
+        }
+
+        /* Dynamic Classes for JS Templates */
+        .lang-notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .lang-note-js {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 3px solid #f7df1e;
+        }
+
+        .lang-title-js {
+            color: #f7df1e;
+            margin-bottom: 0.75rem;
+        }
+
+        .lang-note-py {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 3px solid #3776ab;
+        }
+
+        .lang-title-py {
+            color: #3776ab;
+            margin-bottom: 0.75rem;
+        }
+
+        .lang-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .lang-gotchas {
+            margin: 0;
+            padding-left: 1.25rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .meta-flex-1 {
+            flex: 1;
+        }
+
+        .question-count {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .placeholder-box {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(97, 218, 251, 0.1);
+            border-radius: 10px;
+            border: 1px dashed var(--accent-cyan);
+        }
+
+        .placeholder-title {
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .header-meta {
+                width: 100%;
+                margin-top: 0.5rem;
+                justify-content: flex-start;
+            }
+
+            .section {
+                padding: 1.25rem;
+            }
+
+            .pattern-grid,
+            .mistake-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="index.html" class="back-btn">← Back to Graph</a>
+        <h1 class="header-title" id="topic-title">Loading...</h1>
+        <div class="header-meta">
+            <span class="difficulty-badge" id="difficulty-badge"></span>
+            <span id="time-estimate"></span>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-nav">
+                <h3>On This Page</h3>
+                <div id="sidebar-links">
+                    <a href="#definition" class="nav-link">Definition</a>
+                    <a href="#how-it-works" class="nav-link">How It Works</a>
+                    <a href="#when-to-use" class="nav-link">When to Use</a>
+                    <a href="#when-not-to-use" class="nav-link">When NOT to Use</a>
+                    <a href="#intuition" class="nav-link">Intuition</a>
+                    <a href="#complexity" class="nav-link">Complexity</a>
+                    <a href="#under-the-hood" class="nav-link">Under the Hood</a>
+                    <a href="#code-templates" class="nav-link">Code Templates</a>
+                    <a href="#visual-trace" class="nav-link">Visual Trace</a>
+                    <a href="#common-mistakes" class="nav-link">Common Mistakes</a>
+                    <a href="#key-takeaways" class="nav-link">Key Takeaways</a>
+                    <a href="#learning-path" class="nav-link">Learning Path</a>
+                    <div class="sidebar-divider"></div>
+                    <a href="#interview-questions" class="nav-link">📝 Interview Qs</a>
+                    <a href="#references" class="nav-link">📚 References</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="content" id="main-content">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="data/graph_data.js?v=25"></script>
+    <script>
+        // JS logic refactored to use classes
+        // ... (I will include the logic with class updates)
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const topicId = urlParams.get('id');
+
+        if (typeof graphData === 'undefined' || !Array.isArray(graphData.nodes)) {
+            console.error('[DSA Visualizer] Missing graphData.');
+            document.getElementById('main-content').innerHTML = `
+                <div class="no-content">
+                    <h2>Topic Failed to Load</h2>
+                    <p>The required data file <strong>graph_data.js</strong> didn’t load.</p>
+                    <a href="graph.html" class="back-btn">← Back to Graph</a>
+                </div>
+            `;
+            throw new Error('Missing graphData');
+        }
+
+        const node = graphData.nodes.find(n => n.id === topicId);
+
+        if (!node) {
+            document.getElementById('main-content').innerHTML = `
+                <div class="no-content">
+                    <h2>Topic Not Found</h2>
+                    <p>The topic "${topicId}" was not found.</p>
+                    <a href="index.html" class="back-btn">← Back to Graph</a>
+                </div>
+            `;
+        } else if (!node.content) {
+            document.getElementById('topic-title').textContent = node.label;
+            document.title = `${node.label} - DSA Learning`;
+            renderPartialContent(node);
+        } else {
+            renderContent(node);
+        }
+
+        function renderPartialContent(node) {
+            const diffBadge = document.getElementById('difficulty-badge');
+            if (node.difficulty) {
+                diffBadge.textContent = `Difficulty: ${node.difficulty}/10`;
+                diffBadge.className = `difficulty-badge difficulty-${node.difficulty}`;
+            }
+            if (node.timeEstimate) {
+                document.getElementById('time-estimate').textContent = `⏱️ ${node.timeEstimate}`;
+            }
+
+            let html = renderMetaBar(node);
+            html += `
+                <section class="section" id="definition">
+                    <h2 class="section-title"><span class="icon">📖</span> About ${node.label}</h2>
+                    <div class="definition-simple">${node.description || 'Description coming soon.'}</div>
+                    <div class="placeholder-box">
+                        <h3 class="placeholder-title">📝 Full Content Coming Soon</h3>
+                        <p style="color: var(--text-secondary);">Detailed content is being developed.</p>
+                    </div>
+                </section>
+            `;
+
+            if (node.interviewQuestions && node.interviewQuestions.length > 0) html += renderInterviewQuestions(node.interviewQuestions);
+            if (node.references) html += renderReferences(node.references);
+
+            document.getElementById('main-content').innerHTML = html;
+            updateSidebarForPartialContent(node);
+        }
+
+        function updateSidebarForPartialContent(node) {
+            const sidebarLinks = document.getElementById('sidebar-links');
+            let linksHtml = `<a href="#definition" class="nav-link">About</a>`;
+            if (node.interviewQuestions && node.interviewQuestions.length > 0) {
+                linksHtml += `<div class="sidebar-divider"></div>`;
+                linksHtml += `<a href="#interview-questions" class="nav-link">📝 Interview Qs (${node.interviewQuestions.length})</a>`;
+            }
+            if (node.references) {
+                if (!(node.interviewQuestions && node.interviewQuestions.length > 0)) linksHtml += `<div class="sidebar-divider"></div>`;
+                linksHtml += `<a href="#references" class="nav-link">📚 References</a>`;
+            }
+            sidebarLinks.innerHTML = linksHtml;
+        }
+
+        function renderContent(node) {
+            const c = node.content;
+            document.getElementById('topic-title').textContent = node.label;
+            document.title = `${node.label} - DSA Learning`;
+
+            const diffBadge = document.getElementById('difficulty-badge');
+            if (node.difficulty) {
+                diffBadge.textContent = `Difficulty: ${node.difficulty}/10`;
+                diffBadge.className = `difficulty-badge difficulty-${node.difficulty}`;
+            }
+            if (node.timeEstimate) document.getElementById('time-estimate').textContent = `⏱️ ${node.timeEstimate}`;
+
+            let html = renderMetaBar(node);
+
+            if (c.definition) {
+                html += `
+                <section class="section" id="definition">
+                    <h2 class="section-title"><span class="icon">📖</span> Definition</h2>
+                    <div class="definition-simple">${c.definition.simple || ''}</div>
+                    ${c.definition.technical ? `<div class="definition-technical">${c.definition.technical}</div>` : ''}
+                </section>`;
+            }
+
+            if (c.howItWorks) {
+                html += `
+                <section class="section" id="how-it-works">
+                    <h2 class="section-title"><span class="icon">⚙️</span> How It Works</h2>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">${c.howItWorks.explanation || ''}</p>
+                    ${c.howItWorks.steps ? renderSteps(c.howItWorks.steps) : ''}
+                    ${c.howItWorks.diagram ? renderDiagram(c.howItWorks.diagram) : ''}
+                </section>`;
+            }
+
+            if (c.whenToUse) {
+                html += `
+                <section class="section" id="when-to-use">
+                    <h2 class="section-title"><span class="icon">✅</span> When to Use</h2>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">${c.whenToUse.summary || ''}</p>
+                    <div class="pattern-grid">
+                        ${(c.whenToUse.patterns || []).map(p => `
+                            <div class="pattern-card">
+                                <h4>${p.pattern}</h4>
+                                <div class="signal">"${p.signal}"</div>
+                                <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">Example: ${p.example}</div>
+                                <div class="pattern-comparison">
+                                    <div class="without-it">${p.withoutIt}</div>
+                                    <div class="with-it">${p.withIt}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>`;
+            }
+
+            if (c.whenNotToUse) {
+                html += `
+                <section class="section" id="when-not-to-use">
+                    <h2 class="section-title"><span class="icon">🚫</span> When NOT to Use</h2>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">${c.whenNotToUse.summary || ''}</p>
+                    ${(c.whenNotToUse.antiPatterns || []).map(ap => `
+                        <div class="antipattern-card">
+                            <h4>${ap.situation}</h4>
+                            <p style="color: var(--text-secondary);">${ap.why}</p>
+                            <div class="use-instead">→ Use instead: ${ap.useInstead}</div>
+                        </div>
+                    `).join('')}
+                </section>`;
+            }
+
+            if (c.intuition) {
+                html += `
+                <section class="section" id="intuition">
+                    <h2 class="section-title"><span class="icon">💡</span> Intuition</h2>
+                    ${c.intuition.analogy ? `
+                        <div class="analogy-box">
+                            <div class="analogy-title">🎯 ${c.intuition.analogy.title}</div>
+                            <div class="analogy-story">${c.intuition.analogy.story}</div>
+                            <div class="analogy-connection">${c.intuition.analogy.connection}</div>
+                        </div>
+                    ` : ''}
+                    ${c.intuition.keyInsight ? `<div class="key-insight">${c.intuition.keyInsight}</div>` : ''}
+                    ${c.intuition.commonConfusion ? `
+                        <h3 style="margin: 1.5rem 0 1rem; color: var(--warning);">⚠️ Common Confusions</h3>
+                        <div class="confusion-list">
+                            ${c.intuition.commonConfusion.map(cc => `
+                                <div class="confusion-item">
+                                    <strong>"${cc.confusion}"</strong>
+                                    <p>${cc.clarification}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </section>`;
+            }
+
+            if (c.complexity) {
+                html += `
+                <section class="section" id="complexity">
+                    <h2 class="section-title"><span class="icon">⏱️</span> Complexity Analysis</h2>
+                    ${c.complexity.time ? `
+                        <table class="complexity-table">
+                            <thead><tr><th>Operation</th><th>Average</th><th>Worst</th><th>Note</th></tr></thead>
+                            <tbody>
+                                ${(c.complexity.time.operations || []).map(op => `
+                                    <tr>
+                                        <td>${op.operation}</td>
+                                        <td><code>${op.average}</code></td>
+                                        <td><code>${op.worst}</code></td>
+                                        <td>${op.note || ''}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        ${c.complexity.time.explanation ? `<p style="color: var(--text-secondary); margin-top: 1rem;">${c.complexity.time.explanation}</p>` : ''}
+                    ` : ''}
+                    ${c.complexity.space ? `
+                        <div class="space-complexity">
+                            <strong>Space Complexity:</strong> <code>${c.complexity.space.complexity}</code><br>
+                            <span style="color: var(--text-secondary);">${c.complexity.space.explanation}</span>
+                        </div>
+                    ` : ''}
+                </section>`;
+            }
+
+            if (c.underTheHood) {
+                html += `
+                <section class="section" id="under-the-hood">
+                    <h2 class="section-title"><span class="icon">🔧</span> Under the Hood</h2>
+                    ${c.underTheHood.memoryLayout ? `
+                        <p style="margin-bottom: 1rem;">${c.underTheHood.memoryLayout.explanation || ''}</p>
+                        <ul style="color: var(--text-secondary); padding-left: 1.5rem;">
+                            ${(c.underTheHood.memoryLayout.keyPoints || []).map(kp => `<li style="margin-bottom: 0.5rem;">${kp}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                    ${c.underTheHood.languageNotes ? renderLanguageNotes(c.underTheHood.languageNotes) : ''}
+                </section>`;
+            }
+
+            if (c.codeTemplates && c.codeTemplates.length > 0) {
+                html += `
+                <section class="section" id="code-templates">
+                    <h2 class="section-title"><span class="icon">💻</span> Code Templates</h2>
+                    ${c.codeTemplates.map((template, idx) => renderCodeTemplate(template, idx)).join('')}
+                </section>`;
+            }
+
+            if (c.visualTrace) {
+                html += `
+                <section class="section" id="visual-trace">
+                    <h2 class="section-title"><span class="icon">🔍</span> Visual Trace</h2>
+                    <h3 style="margin-bottom: 1rem;">${c.visualTrace.title || ''}</h3>
+                    ${c.visualTrace.input ? `<p style="color: var(--text-secondary); margin-bottom: 1rem;">Input: <code>${JSON.stringify(c.visualTrace.input)}</code></p>` : ''}
+                    ${c.visualTrace.steps ? renderTraceTable(c.visualTrace.steps) : ''}
+                    ${c.visualTrace.output ? `<p style="margin-top: 1rem; color: var(--success);"><strong>Output:</strong> ${c.visualTrace.output}</p>` : ''}
+                </section>`;
+            }
+
+            if (c.commonMistakes && c.commonMistakes.length > 0) {
+                html += `
+                <section class="section" id="common-mistakes">
+                    <h2 class="section-title"><span class="icon">⚠️</span> Common Mistakes</h2>
+                    ${c.commonMistakes.map(m => `
+                        <div class="mistake-card">
+                            <div class="mistake-title">${m.mistake}</div>
+                            <div class="mistake-comparison">
+                                <div class="mistake-wrong">${escapeHtml(m.wrong)}</div>
+                                <div class="mistake-right">${escapeHtml(m.right)}</div>
+                            </div>
+                            <div class="mistake-explanation">${m.explanation}</div>
+                        </div>
+                    `).join('')}
+                </section>`;
+            }
+
+            if (c.keyTakeaways && c.keyTakeaways.length > 0) {
+                html += `
+                <section class="section" id="key-takeaways">
+                    <h2 class="section-title"><span class="icon">🎯</span> Key Takeaways</h2>
+                    <ul class="takeaways-list">
+                        ${c.keyTakeaways.map(t => `<li>${t}</li>`).join('')}
+                    </ul>
+                </section>`;
+            }
+
+            if (c.learningPath) {
+                html += `
+                <section class="section" id="learning-path">
+                    <h2 class="section-title"><span class="icon">🗺️</span> Learning Path</h2>
+                    ${c.learningPath.prerequisites ? `
+                        <div class="path-section">
+                            <h4>Prerequisites</h4>
+                            <div class="path-items">
+                                ${c.learningPath.prerequisites.map(p => `
+                                    <a href="topic.html?id=${p.id}" class="path-item">
+                                        ${p.label}
+                                        <span class="why">${p.why}</span>
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${c.learningPath.nextTopics ? `
+                        <div class="path-section">
+                            <h4>Next Topics</h4>
+                            <div class="path-items">
+                                ${c.learningPath.nextTopics.map(p => `
+                                    <a href="topic.html?id=${p.id}" class="path-item">
+                                        ${p.label}
+                                        <span class="why">${p.why}</span>
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </section>`;
+            }
+
+            if (node.interviewQuestions && node.interviewQuestions.length > 0) html += renderInterviewQuestions(node.interviewQuestions);
+            if (node.references) html += renderReferences(node.references);
+
+            document.getElementById('main-content').innerHTML = html;
+
+            setTimeout(() => { if (window.mermaid) mermaid.run(); }, 100);
+            document.querySelectorAll('pre code').forEach((el) => { hljs.highlightElement(el); });
+
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const code = btn.parentElement.querySelector('code').textContent;
+                    navigator.clipboard.writeText(code);
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => btn.textContent = 'Copy', 2000);
+                });
+            });
+
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        const activeLink = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+                        if (activeLink) activeLink.classList.add('active');
+                    }
+                });
+            }, { rootMargin: '-20% 0px -70% 0px' });
+            sections.forEach(section => observer.observe(section));
+        }
+
+        function renderSteps(steps) {
+            return `
+                <div class="steps-container">
+                    ${steps.map(s => `
+                        <div class="step">
+                            <div class="step-number">${s.step}</div>
+                            <div class="step-content">
+                                <h4>${s.title}</h4>
+                                <p>${s.description}</p>
+                                ${s.why ? `<div class="step-why">Why? ${s.why}</div>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderDiagram(diagram) {
+            if (diagram.type === 'mermaid') {
+                return `
+                    <div class="diagram-container">
+                        <pre class="mermaid">${diagram.code}</pre>
+                        ${diagram.caption ? `<div class="diagram-caption">${diagram.caption}</div>` : ''}
+                    </div>
+                `;
+            }
+            return '';
+        }
+
+        function renderLanguageNotes(notes) {
+            let html = '<div class="lang-notes-grid">';
+            if (notes.javascript) {
+                html += `
+                    <div class="lang-note-js">
+                        <h4 class="lang-title-js">JavaScript</h4>
+                        <p class="lang-desc">${notes.javascript.implementation || ''}</p>
+                        ${notes.javascript.gotchas ? `<ul class="lang-gotchas">${notes.javascript.gotchas.map(g => `<li>${g}</li>`).join('')}</ul>` : ''}
+                    </div>
+                `;
+            }
+            if (notes.python) {
+                html += `
+                    <div class="lang-note-py">
+                        <h4 class="lang-title-py">Python</h4>
+                        <p class="lang-desc">${notes.python.implementation || ''}</p>
+                        ${notes.python.gotchas ? `<ul class="lang-gotchas">${notes.python.gotchas.map(g => `<li>${g}</li>`).join('')}</ul>` : ''}
+                    </div>
+                `;
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function renderCodeTemplate(template, idx) {
+            const jsCode = template.javascript?.code || '';
+            const pyCode = template.python?.code || '';
+            const jsNotes = template.javascript?.notes || '';
+            const pyNotes = template.python?.notes || '';
+
+            return `
+                <div class="code-template">
+                    <div class="code-template-header">
+                        <span class="code-template-title">${template.name}</span>
+                    </div>
+                    <p class="code-template-desc">${template.description || ''}</p>
+                    <div class="code-tabs">
+                        <button class="code-tab active" onclick="showTab(this, 'js-${idx}')">JavaScript</button>
+                        <button class="code-tab" onclick="showTab(this, 'py-${idx}')">Python</button>
+                    </div>
+                    <div class="code-block" id="js-${idx}">
+                        <button class="copy-btn">Copy</button>
+                        <pre><code class="language-javascript">${escapeHtml(jsCode)}</code></pre>
+                        ${jsNotes ? `<div class="code-notes">${jsNotes}</div>` : ''}
+                    </div>
+                    <div class="code-block" id="py-${idx}" style="display: none;">
+                        <button class="copy-btn">Copy</button>
+                        <pre><code class="language-python">${escapeHtml(pyCode)}</code></pre>
+                        ${pyNotes ? `<div class="code-notes">${pyNotes}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // This helper function needs to be attached to window to work with inline onclick handlers,
+        // or we need to rewrite interactions. Inline handlers are used in template literal.
+        window.showTab = function (btn, targetId) {
+            const container = btn.closest('.code-template');
+            container.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            container.querySelectorAll('.code-block').forEach(b => b.style.display = 'none');
+            document.getElementById(targetId).style.display = 'block';
+        };
+
+        function renderTraceTable(steps) {
+            if (!steps || steps.length === 0) return '';
+            const keys = Object.keys(steps[0]);
+            return `
+                <table class="trace-table">
+                    <thead><tr>${keys.map(k => `<th>${k}</th>`).join('')}</tr></thead>
+                    <tbody>${steps.map(step => `<tr>${keys.map(k => `<td>${step[k] || ''}</td>`).join('')}</tr>`).join('')}</tbody>
+                </table>
+            `;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function renderMetaBar(node) {
+            const difficulty = node.difficulty || 5;
+            const stars = '★'.repeat(difficulty) + '☆'.repeat(10 - difficulty);
+            const timeEstimate = node.timeEstimate || '~2 hours';
+            const companies = node.companies || [];
+            const interviewFrequency = node.interviewFrequency || 'medium';
+
+            const freqClass = interviewFrequency === 'very-high' || interviewFrequency === 'high' ? 'freq-high' : interviewFrequency === 'medium' ? 'freq-medium' : 'freq-low';
+            const freqLabel = interviewFrequency === 'very-high' ? '🔥 Very High' : interviewFrequency === 'high' ? '🔥 Hot' : interviewFrequency === 'medium' ? '📈 Medium' : '📊 Normal';
+
+            return `
+                <div class="meta-bar">
+                    <div class="meta-item">
+                        <span class="meta-label">Difficulty</span>
+                        <span class="meta-value difficulty-stars">${stars}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Time to Learn</span>
+                        <span class="meta-value">⏱️ ${timeEstimate}</span>
+                    </div>
+                    ${companies.length > 0 ? `
+                        <div class="meta-item meta-flex-1">
+                            <span class="meta-label">Asked At <span class="freq-badge ${freqClass}">${freqLabel}</span></span>
+                            <div class="companies-container">
+                                ${companies.slice(0, 8).map(c => `<span class="company-tag">${c}</span>`).join('')}
+                                ${companies.length > 8 ? `<span class="company-tag company-tag-more">+${companies.length - 8} more</span>` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function renderInterviewQuestions(questions) {
+            return `
+                <section class="section" id="interview-questions">
+                    <h2 class="section-title"><span class="icon">📝</span> Interview Questions <span class="question-count">(${questions.length})</span></h2>
+                    <div class="questions-grid">
+                        ${questions.map((q, idx) => `
+                            <div class="question-card" data-question-idx="${idx}">
+                                <div class="question-header" onclick="toggleQuestionCard(this)">
+                                    <span class="question-name">
+                                        <a href="${q.leetcode || q.url || '#'}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${q.name}</a>
+                                    </span>
+                                    <span class="question-difficulty diff-${(q.difficulty || 'medium').toLowerCase()}">${q.difficulty || 'Medium'}</span>
+                                    <span class="question-toggle">▼</span>
+                                </div>
+                                <div class="question-details">
+                                    ${q.frequency ? `<span class="freq-badge ${q.frequency === 'Very High' ? 'freq-high' : q.frequency === 'High' ? 'freq-high' : 'freq-medium'}">${q.frequency}</span>` : ''}
+                                    ${q.companies && q.companies.length > 0 ? `<div class="question-section"><div class="question-section-title">Companies</div><div class="question-companies">${q.companies.map(c => `<span class="q-company">${c}</span>`).join('')}</div></div>` : ''}
+                                    ${q.whyAsked ? `<div class="question-section"><div class="question-section-title">Why Asked</div><div class="question-section-content">${q.whyAsked}</div></div>` : ''}
+                                    ${q.approach ? `<div class="question-section"><div class="question-section-title">Approach</div><div class="question-section-content">${q.approach}</div></div>` : ''}
+                                    ${q.followUps && q.followUps.length > 0 ? `
+                                        <div class="question-section">
+                                            <div class="question-section-title">Follow-up Questions</div>
+                                            <div class="question-followups">
+                                                ${q.followUps.map(f => {
+                const question = typeof f === 'string' ? f : f.question;
+                const answer = typeof f === 'string' ? '' : (f.answer || '');
+                return `<div class="followup-item" onclick="this.classList.toggle('expanded')"><div class="followup-question">${question}</div>${answer ? `<div class="followup-answer">${answer}</div>` : ''}</div>`;
+            }).join('')}
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                    ${q.sourceDetails && q.sourceDetails.length > 0 ? `
+                                        <div class="question-sources">${q.sourceDetails.map(s => `<span class="source-link"><a href="${s.url || '#'}" target="_blank" rel="noopener" title="${s.note || ''}">${s.name}</a></span>`).join('')}</div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        window.toggleQuestionCard = function (header) {
+            const card = header.closest('.question-card');
+            card.classList.toggle('expanded');
+        };
+
+        function renderReferences(refs) {
+            const hasRefs = (refs.official && refs.official.length > 0) || (refs.community && refs.community.length > 0) || (refs.guides && refs.guides.length > 0);
+            if (!hasRefs) return '';
+
+            return `
+                <section class="section" id="references">
+                    <h2 class="section-title"><span class="icon">📚</span> References</h2>
+                    <div class="references-grid">
+                        ${refs.official && refs.official.length > 0 ? `<div class="ref-category"><h4>📘 Official Docs</h4><div class="ref-links">${refs.official.map(r => `<a href="${r.url}" target="_blank" rel="noopener" class="ref-link">${r.title || r.name}</a>`).join('')}</div></div>` : ''}
+                        ${refs.community && refs.community.length > 0 ? `<div class="ref-category"><h4>👥 Community Resources</h4><div class="ref-links">${refs.community.map(r => `<a href="${r.url}" target="_blank" rel="noopener" class="ref-link">${r.title || r.name}</a>`).join('')}</div></div>` : ''}
+                        ${refs.guides && refs.guides.length > 0 ? `<div class="ref-category"><h4>📖 Guides & Tutorials</h4><div class="ref-links">${refs.guides.map(r => `<a href="${r.url}" target="_blank" rel="noopener" class="ref-link">${r.title || r.name}</a>`).join('')}</div></div>` : ''}
+                    </div>
+                </section>
+            `;
+        }
+
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+        }
+    </script>
+</body>
+
+</html>

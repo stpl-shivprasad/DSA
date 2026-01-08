@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Mastery | Learn Data Structures &amp; Algorithms</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#61dafb">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <style>
+        /* Landing Page Specific Styles */
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(rgba(97, 218, 251, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(97, 218, 251, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-glow-1 {
+            top: -200px;
+            right: -100px;
+            background: var(--accent-cyan);
+        }
+
+        .bg-glow-2 {
+            bottom: -200px;
+            left: -100px;
+            background: var(--accent-purple);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(30px, 30px);
+            }
+        }
+
+        /* Main content */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Header */
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(97, 218, 251, 0.1);
+            border: 1px solid rgba(97, 218, 251, 0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Stats row (landing page specific layout) */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* View cards */
+        .views {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .view-card {
+            background: linear-gradient(145deg, rgba(26, 31, 46, 0.8), rgba(17, 24, 39, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 32px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: block;
+        }
+
+        .view-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--card-accent), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .view-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(97, 218, 251, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .view-card:hover::before {
+            opacity: 1;
+        }
+
+        .view-card.graph {
+            --card-accent: var(--accent-cyan);
+        }
+
+        .view-card.periodic {
+            --card-accent: var(--accent-purple);
+        }
+
+        .view-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .view-card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-primary);
+        }
+
+        .view-card h2::after {
+            content: '→';
+            font-size: 1.2rem;
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: all 0.3s;
+        }
+
+        .view-card:hover h2::after {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .view-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .view-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .view-feature {
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Quick links */
+        .quick-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .quick-link:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(97, 218, 251, 0.3);
+            color: var(--text-primary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+
+        kbd {
+            padding: 2px 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            .stats {
+                gap: 32px;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .views {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background effects -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <span class="hero-badge">🚀 Interactive Learning</span>
+            <h1>Data Structures &amp;<br>Algorithms Mastery</h1>
+            <p>Visualize, understand, and master 232 DSA concepts through interactive exploration. Built for interview
+                prep and deep learning.</p>
+        </section>
+
+        <!-- Stats -->
+        <section class="stats">
+            <div class="stat">
+                <div class="stat-value">232</div>
+                <div class="stat-label">Topics Covered</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">32</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">67</div>
+                <div class="stat-label">Company Tagged</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">9</div>
+                <div class="stat-label">FAANG+ Companies</div>
+            </div>
+        </section>
+
+        <!-- View Options -->
+        <section class="views">
+            <a href="graph.html" class="view-card graph">
+                <span class="view-icon">🕸️</span>
+                <h2>Graph View</h2>
+                <p>Explore topics as an interconnected knowledge graph. See relationships, dependencies, and learning
+                    paths between concepts.</p>
+                <div class="view-features">
+                    <span class="view-feature">Interactive Network</span>
+                    <span class="view-feature">Learning Paths</span>
+                    <span class="view-feature">Minimap</span>
+                    <span class="view-feature">Topic Details</span>
+                </div>
+            </a>
+
+            <a href="periodic-table.html" class="view-card periodic">
+                <span class="view-icon">⚛️</span>
+                <h2>Periodic Table</h2>
+                <p>Browse all 232 topics in a periodic table layout. Filter by difficulty, company, and category.
+                    Perfect for quick reference.</p>
+                <div class="view-features">
+                    <span class="view-feature">Category Colors</span>
+                    <span class="view-feature">Company Filter</span>
+                    <span class="view-feature">Difficulty Levels</span>
+                    <span class="view-feature">Quick Search</span>
+                </div>
+            </a>
+
+            <a href="resources.html" class="view-card glow-green">
+                <span class="view-icon">📚</span>
+                <h2>Community Resources</h2>
+                <p>Curated learning resources from the community. YouTube channels, courses, books, and practice
+                    platforms all in one place.</p>
+                <div class="view-features">
+                    <span class="view-feature">YouTube Channels</span>
+                    <span class="view-feature">Paid Courses</span>
+                    <span class="view-feature">Books</span>
+                    <span class="view-feature">Practice Platforms</span>
+                </div>
+            </a>
+        </section>
+
+        <!-- Quick Links -->
+        <section class="quick-links">
+            <a href="periodic-table.html?company=Google" class="quick-link">🔵 Google Prep</a>
+            <a href="periodic-table.html?company=Meta" class="quick-link">🔷 Meta Prep</a>
+            <a href="periodic-table.html?company=Amazon" class="quick-link">🟠 Amazon Prep</a>
+            <a href="periodic-table.html?difficulty=7-10" class="quick-link">🔥 Hard Problems</a>
+            <a href="graph.html?company=Google" class="quick-link">🗺️ Google Graph</a>
+            <a href="graph.html?company=Meta" class="quick-link">🗺️ Meta Graph</a>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Press <kbd>G</kbd> for Graph View · <kbd>P</kbd> for Periodic Table · <kbd>R</kbd> for Resources ·
+                <kbd>/</kbd> to Search
+            </p>
+            <p class="footer-credit">Built for the <a href="../README.md">DSA Hard Parts</a> curriculum</p>
+        </footer>
+    </div>
+
+    <script>
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT') return;
+
+            switch (e.key.toLowerCase()) {
+                case 'g':
+                    window.location.href = 'graph.html';
+                    break;
+                case 'p':
+                    window.location.href = 'periodic-table.html';
+                    break;
+                case 'r':
+                    window.location.href = 'resources.html';
+                    break;
+                case '/':
+                    e.preventDefault();
+                    window.location.href = 'periodic-table.html';
+                    break;
+            }
+        });
+
+        // Animate stats on load
+        document.querySelectorAll('.stat-value').forEach(el => {
+            const target = parseInt(el.textContent);
+            let current = 0;
+            const increment = Math.ceil(target / 30);
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                el.textContent = current;
+            }, 30);
+        });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+        }
+    </script>
+</body>
+
+</html>

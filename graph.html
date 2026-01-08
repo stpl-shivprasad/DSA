@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Concept Graph</title>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#61dafb">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <style>
+        /* Graph Specific Styles & Overrides */
+        body {
+            overflow: hidden;
+        }
+
+        #mynetwork {
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(ellipse at center, #1a1f2e 0%, #0a0e17 100%);
+        }
+
+        #search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(30, 35, 45, 0.98);
+            border: 1px solid rgba(97, 218, 251, 0.3);
+            border-radius: 8px;
+            margin-top: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+        }
+
+        #search-results.active {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.15s;
+        }
+
+        .search-result-item:hover {
+            background: rgba(97, 218, 251, 0.1);
+        }
+
+        .search-result-label {
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .search-result-category {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* Stats & Tags */
+        .stats-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .stat-badge {
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #aaa;
+        }
+
+        .top-companies {
+            margin-bottom: 16px;
+        }
+
+        .top-companies h4 {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .company-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .company-tag {
+            padding: 4px 10px;
+            background: rgba(97, 218, 251, 0.1);
+            border: 1px solid rgba(97, 218, 251, 0.3);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #61dafb;
+        }
+
+        .questions-preview h4 {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .question-item {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+            color: #ccc;
+            border-left: 2px solid #3d5a80;
+        }
+
+        .quiz-btn {
+            display: block;
+            width: 100%;
+            margin-top: 8px;
+            padding: 10px 14px;
+            background: rgba(238, 108, 77, 0.15);
+            border: 1px solid rgba(238, 108, 77, 0.4);
+            color: #ee6c4d;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-btn:hover {
+            background: rgba(238, 108, 77, 0.25);
+        }
+
+        .related-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .related-tag {
+            padding: 6px 12px;
+            background: rgba(97, 218, 251, 0.1);
+            border: 1px solid rgba(97, 218, 251, 0.3);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #61dafb;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .related-tag:hover {
+            background: rgba(97, 218, 251, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Bottom Left Container & Legend */
+        #bottom-left-container {
+            position: absolute;
+            bottom: 80px;
+            left: 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        #legend {
+            background: rgba(30, 35, 45, 0.95);
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(97, 218, 251, 0.15);
+            backdrop-filter: blur(10px);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #legend h4 {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 0.8rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+
+        .legend-item:hover {
+            color: #fff;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        /* Minimap */
+        #minimap-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        #minimap {
+            width: 180px;
+            height: 130px;
+            background: rgba(30, 35, 45, 0.95);
+            border: 1px solid rgba(97, 218, 251, 0.2);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        #minimap-label {
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            font-size: 0.65rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        #minimap-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        #minimap-viewport {
+            position: absolute;
+            border: 2px solid #61dafb;
+            background: rgba(97, 218, 251, 0.1);
+            pointer-events: none;
+            border-radius: 3px;
+        }
+
+        #minimap-zoom-hint {
+            position: absolute;
+            bottom: 4px;
+            right: 6px;
+            font-size: 0.6rem;
+            color: #666;
+        }
+
+        #minimap-toggle {
+            padding: 4px 10px;
+            background: rgba(30, 35, 45, 0.9);
+            border: 1px solid rgba(97, 218, 251, 0.2);
+            border-radius: 6px;
+            color: #888;
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Learning Path Panel */
+        #learning-path {
+            position: absolute;
+            top: 80px;
+            left: 16px;
+            width: 320px;
+            max-height: calc(100vh - 180px);
+            background: rgba(30, 35, 45, 0.98);
+            border: 1px solid rgba(97, 218, 251, 0.2);
+            border-radius: 12px;
+            display: none;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        #learning-path.visible {
+            display: block;
+        }
+
+        .lp-header {
+            padding: 14px 16px;
+            background: linear-gradient(135deg, rgba(97, 218, 251, 0.1), rgba(168, 85, 247, 0.1));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .lp-header h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .lp-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .lp-content {
+            padding: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .lp-step {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .lp-step:hover {
+            background: rgba(97, 218, 251, 0.05);
+        }
+
+        .lp-step-num {
+            width: 24px;
+            height: 24px;
+            background: rgba(97, 218, 251, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #61dafb;
+            flex-shrink: 0;
+        }
+
+        .lp-step.current .lp-step-num {
+            background: #61dafb;
+            color: #0a0e17;
+        }
+
+        .lp-step-info {
+            flex: 1;
+        }
+
+        .lp-step-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .lp-step-cat {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .lp-nav {
+            padding: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 8px;
+        }
+
+        .lp-nav button {
+            flex: 1;
+            padding: 8px;
+            background: rgba(97, 218, 251, 0.1);
+            border: 1px solid rgba(97, 218, 251, 0.3);
+            border-radius: 6px;
+            color: #61dafb;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .lp-nav button:hover {
+            background: rgba(97, 218, 251, 0.2);
+        }
+
+        #node-used-by {
+            margin-bottom: 16px;
+        }
+
+        #node-used-by h4 {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .used-by-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .used-by-tag {
+            padding: 4px 10px;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #a855f7;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .used-by-tag:hover {
+            background: rgba(168, 85, 247, 0.2);
+        }
+
+        .quiz-question {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: rgba(97, 218, 251, 0.1);
+            border-color: rgba(97, 218, 251, 0.3);
+        }
+
+        .quiz-option.selected {
+            background: rgba(97, 218, 251, 0.2);
+            border-color: #61dafb;
+        }
+
+        .quiz-option.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+        }
+
+        .quiz-nav {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .quiz-nav button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #1e3a5f, #3d5a80);
+            border: 1px solid rgba(97, 218, 251, 0.4);
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="toolbar">
+        <div id="view-toggle" class="view-toggle">
+            <a href="index.html">🏠</a>
+            <a href="graph.html" class="active">🕸️ Graph</a>
+            <a href="periodic-table.html">⚛️ Table</a>
+            <a href="resources.html">📚 Resources</a>
+        </div>
+        <div id="search-container">
+            <input type="text" id="search-input" class="toolbar-search" placeholder="Search nodes... (press /)"
+                autocomplete="off">
+            <div id="search-results"></div>
+        </div>
+        <button id="focus-root" class="toolbar-btn" type="button">🏠 Root</button>
+        <button id="toggle-physics" class="toolbar-btn" type="button">⚡ Physics: on</button>
+        <button id="toggle-edge-labels" class="toolbar-btn" type="button">🏷️ Labels: off</button>
+        <button id="toggle-lineage" class="toolbar-btn" type="button">🔗 Lineage: on</button>
+        <button id="toggle-learning-path" class="toolbar-btn" type="button">🎯 Path</button>
+    </div>
+
+    <div id="mynetwork" tabindex="0" aria-label="DSA concept graph"></div>
+
+    <div id="info-panel">
+        <button class="panel-close" id="panel-close" type="button" aria-label="Close details panel"
+            onclick="closePanel()">✕</button>
+        <div class="panel-header">
+            <div class="panel-symbol" id="node-symbol">DS</div>
+            <div class="panel-title-section">
+                <div class="panel-name" id="node-label"></div>
+                <div class="panel-category" id="node-category"></div>
+            </div>
+        </div>
+
+        <div class="meta-grid">
+            <div class="meta-card">
+                <div class="meta-card-label">Difficulty</div>
+                <div id="node-difficulty" class="meta-card-value stars"></div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-card-label">Interview</div>
+                <div id="node-interview" class="meta-card-value"></div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-card-label">Time</div>
+                <div id="node-time" class="meta-card-value time"></div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-card-label">Type</div>
+                <div id="node-type" class="meta-card-value"></div>
+            </div>
+        </div>
+
+        <div class="panel-tabs" role="tablist" aria-label="Node details tabs">
+            <button type="button" class="panel-tab active" id="panel-tab-overview" role="tab" aria-selected="true"
+                aria-controls="tab-overview" data-tab="overview">Overview</button>
+            <button type="button" class="panel-tab" id="panel-tab-companies" role="tab" aria-selected="false"
+                aria-controls="tab-companies" data-tab="companies">Companies</button>
+            <button type="button" class="panel-tab" id="panel-tab-related" role="tab" aria-selected="false"
+                aria-controls="tab-related" data-tab="related">Related</button>
+        </div>
+
+        <div class="panel-body">
+            <!-- Overview Tab -->
+            <div id="tab-overview" class="tab-content active" role="tabpanel" aria-labelledby="panel-tab-overview">
+                <div id="node-stats" class="stats-row"></div>
+                <div id="node-questions" class="questions-preview"></div>
+                <p id="node-desc" class="node-description" hidden></p>
+            </div>
+
+            <!-- Companies Tab -->
+            <div id="tab-companies" class="tab-content" role="tabpanel" aria-labelledby="panel-tab-companies" hidden>
+                <div id="node-companies" class="top-companies"></div>
+            </div>
+
+            <!-- Related Tab -->
+            <div id="tab-related" class="tab-content" role="tabpanel" aria-labelledby="panel-tab-related" hidden>
+                <div id="node-used-by"></div>
+                <div id="node-related" class="related-nodes"></div>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <a id="learn-btn" href="#" class="learn-more-btn" hidden>
+                <span>📚 Deep Dive</span>
+                <span class="arrow">→</span>
+            </a>
+            <button type="button" id="quiz-btn" class="quiz-btn" hidden onclick="openQuiz(currentNodeId)">
+                🧠 Quick Quiz
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Left: Legend + Mini-map -->
+    <div id="bottom-left-container">
+        <div id="legend">
+            <h4>Legend</h4>
+            <!-- Generated by JS -->
+        </div>
+
+        <div id="minimap-container">
+            <div id="minimap">
+                <span id="minimap-label">Navigator</span>
+                <canvas id="minimap-canvas"></canvas>
+                <div id="minimap-viewport"></div>
+                <span id="minimap-zoom-hint">scroll to zoom</span>
+            </div>
+            <button type="button" id="minimap-toggle" onclick="toggleMinimap()" aria-label="Toggle minimap">
+                <span id="minimap-toggle-icon">◫</span>
+                <span id="minimap-toggle-text">Hide</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Learning Path Panel -->
+    <div id="learning-path">
+        <div class="lp-header">
+            <h3>🎯 Learning Path</h3>
+            <button type="button" class="lp-close" onclick="toggleLearningPath()"
+                aria-label="Close learning path">×</button>
+        </div>
+        <div class="lp-content" id="lp-content"></div>
+        <div class="lp-nav">
+            <button type="button" id="lp-prev" onclick="lpNavigate(-1)">← Previous</button>
+            <button type="button" id="lp-next" onclick="lpNavigate(1)">Next →</button>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quiz-modal">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h3 id="quiz-title">🧠 Quick Quiz</h3>
+                <button type="button" class="quiz-close" onclick="closeQuiz()" aria-label="Close quiz">×</button>
+            </div>
+            <div class="quiz-body" id="quiz-body"></div>
+            <div class="quiz-nav">
+                <button type="button" id="quiz-prev" onclick="quizNavigate(-1)">← Previous</button>
+                <span id="quiz-progress">1/5</span>
+                <button type="button" id="quiz-next" onclick="quizNavigate(1)">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data/graph_data.js?v=25"></script>
+    <script src="js/app.js?v=25"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+        }
+    </script>
+</body>
+
+</html>

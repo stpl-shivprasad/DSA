@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Resources Library</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#61dafb">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <style>
+        /* Resources Specific Styles */
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-container {
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .resource-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .section-count {
+            margin-left: auto;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .resource-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease-out forwards;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(97, 218, 251, 0.3);
+            background: var(--bg-card-hover);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .resource-card.selected {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 2px var(--accent-cyan), 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .resource-card:nth-child(n) {
+            animation-delay: calc(0.02s * var(--i, 1));
+        }
+
+        .card-header {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .card-title-group {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+        }
+
+        .card-type-badge {
+            padding: 2px 8px;
+            background: rgba(97, 218, 251, 0.1);
+            color: var(--accent-cyan);
+            border-radius: 4px;
+        }
+
+        .card-price {
+            color: var(--accent-green);
+            font-weight: 500;
+        }
+
+        .card-price.paid {
+            color: var(--accent-yellow);
+        }
+
+        .card-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .meta-tag {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.03);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .meta-tag.highlight {
+            color: var(--accent-purple);
+            background: rgba(168, 85, 247, 0.1);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.8rem;
+        }
+
+        .card-rating {
+            color: var(--accent-yellow);
+            font-weight: 500;
+        }
+
+        .card-view-btn {
+            color: var(--accent-cyan);
+            font-weight: 500;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.2s;
+        }
+
+        .resource-card:hover .card-view-btn {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Panel Specifics */
+        .panel-price.paid {
+            color: var(--accent-yellow);
+        }
+
+        .best-for-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .best-for-tag {
+            padding: 4px 10px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .topics-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .topic-tag {
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .pros-title {
+            color: var(--accent-green);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .cons-title {
+            color: var(--accent-red);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .pros-cons ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pros-cons li {
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            padding-left: 12px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .pros-cons li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="toolbar">
+        <div class="view-toggle">
+            <a href="index.html">🏠</a>
+            <a href="graph.html">🕸️ Graph</a>
+            <a href="periodic-table.html">⚛️ Table</a>
+            <a href="resources.html" class="active">📚 Resources</a>
+        </div>
+
+        <select class="toolbar-select" id="category-filter">
+            <option value="all">📁 All Categories</option>
+            <option value="curated">🔥 Curated Lists</option>
+            <option value="youtube">🎬 YouTube</option>
+            <option value="paid">💎 Paid Courses</option>
+            <option value="free">🎓 Free Academic</option>
+            <option value="books">📕 Books</option>
+            <option value="platforms">💻 Platforms</option>
+            <option value="indian">🇮🇳 Indian Resources</option>
+            <option value="tools">🔧 Tools</option>
+        </select>
+
+        <div class="toolbar-group">
+            <button type="button" class="toolbar-btn active" data-price="all">All</button>
+            <button type="button" class="toolbar-btn" data-price="free">Free</button>
+            <button type="button" class="toolbar-btn" data-price="paid">Paid</button>
+        </div>
+
+        <input type="text" class="toolbar-search" id="search-input" placeholder="🔍 Search resources... (/)">
+
+        <div class="toolbar-stats">
+            <span class="count" id="visible-count">0</span>/<span id="total-count">0</span> resources
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="content-area" id="content-area">
+            <div id="resources-container">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="side-panel" id="detail-panel">
+        <button class="panel-close" id="panel-close" type="button" aria-label="Close panel">&times;</button>
+
+        <div class="panel-header">
+            <div class="panel-icon" id="panel-icon">📚</div>
+            <div class="panel-title-section">
+                <h2 class="panel-name" id="panel-name">Resource Name</h2>
+                <div class="panel-meta">
+                    <span class="panel-type-badge" id="panel-type">Type</span>
+                    <span class="panel-price" id="panel-price">Free</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="meta-grid" id="panel-meta-grid">
+            <!-- Generated by JS -->
+        </div>
+
+        <div class="panel-tabs" role="tablist" aria-label="Resource details tabs">
+            <button class="panel-tab active" type="button" role="tab" aria-selected="true" aria-controls="tab-overview"
+                id="tab-btn-overview" data-tab="overview">Overview</button>
+            <button class="panel-tab" type="button" role="tab" aria-selected="false" aria-controls="tab-details"
+                id="tab-btn-details" data-tab="details">Details</button>
+            <button class="panel-tab" type="button" role="tab" aria-selected="false" aria-controls="tab-compare"
+                id="tab-btn-compare" data-tab="compare">Pros/Cons</button>
+        </div>
+
+        <div class="panel-body">
+            <div class="tab-content active" id="tab-overview" role="tabpanel" aria-labelledby="tab-btn-overview">
+                <!-- Generated by JS -->
+            </div>
+
+            <div class="tab-content" id="tab-details" role="tabpanel" aria-labelledby="tab-btn-details" hidden>
+                <!-- Generated by JS -->
+            </div>
+
+            <div class="tab-content" id="tab-compare" role="tabpanel" aria-labelledby="tab-btn-compare" hidden>
+                <!-- Generated by JS -->
+            </div>
+
+            <a href="#" class="visit-btn" id="panel-link" target="_blank" rel="noopener">
+                Visit Resource →
+            </a>
+        </div>
+    </div>
+
+    <script src="data/resources_data.js?v=25"></script>
+    <script>
+        // Resources Logic (Inline or could be separate app.js but resources is distinct)
+        // I will keep the original logic here but minify/clean it up if possible
+        // Original logic was quite long. I should copy it from the original file I read.
+
+        let currentCategory = 'all';
+        let currentPrice = 'all';
+        let searchQuery = '';
+        let selectedResource = null;
+        let lastFocusedCard = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof resourcesData === 'undefined') {
+                console.error('[DSA Visualizer] Missing resourcesData. Ensure resources_data.js is loading.');
+                document.getElementById('resources-container').innerHTML = `<div class="empty-state"><h3>Resources failed to load</h3></div>`;
+                return;
+            }
+            updateStats();
+            renderResources();
+        });
+
+        function getAllResources() {
+            if (typeof resourcesData === 'undefined') return [];
+            return [
+                ...resourcesData.curatedLists.map(r => ({ ...r, section: 'curated' })),
+                ...resourcesData.youtubeChannels.map(r => ({ ...r, section: 'youtube' })),
+                ...resourcesData.paidCourses.map(r => ({ ...r, section: 'paid' })),
+                ...resourcesData.freeAcademic.map(r => ({ ...r, section: 'free' })),
+                ...resourcesData.books.map(r => ({ ...r, section: 'books' })),
+                ...resourcesData.platforms.map(r => ({ ...r, section: 'platforms' })),
+                ...resourcesData.indianCompanies.map(r => ({ ...r, section: 'indian' })),
+                ...resourcesData.supplementary.map(r => ({ ...r, section: 'tools' }))
+            ];
+        }
+
+        function getPricingTier(resource) {
+            const raw = String(resource?.price || '').trim();
+            if (!raw) return 'free';
+            const p = raw.toLowerCase();
+            const hasFree = p.includes('free');
+            const hasDollar = p.includes('$');
+            const hasPaidWord = p.includes('paid') || p.includes('premium') || p.includes('subscription') || p.includes('pro');
+            if (hasFree && (hasDollar || hasPaidWord)) return 'freemium';
+            if (hasDollar || hasPaidWord) return 'paid';
+            if (hasFree) return 'free';
+            return 'unknown';
+        }
+
+        function filterResources() {
+            let resources = getAllResources();
+            if (currentCategory !== 'all') resources = resources.filter(r => r.section === currentCategory);
+            if (currentPrice === 'free') {
+                resources = resources.filter(r => { const tier = getPricingTier(r); return tier === 'free' || tier === 'freemium'; });
+            } else if (currentPrice === 'paid') {
+                resources = resources.filter(r => { const tier = getPricingTier(r); return tier === 'paid' || tier === 'freemium'; });
+            }
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
+                resources = resources.filter(r => {
+                    const searchable = [r.name, r.description, r.type, ...(r.topics || []), ...(r.bestFor || []), r.createdBy || ''].join(' ').toLowerCase();
+                    return searchable.includes(q);
+                });
+            }
+            return resources;
+        }
+
+        function updateStats() {
+            const total = getAllResources().length;
+            const visible = filterResources().length;
+            document.getElementById('total-count').textContent = total;
+            document.getElementById('visible-count').textContent = visible;
+        }
+
+        function renderResources() {
+            const container = document.getElementById('resources-container');
+            const resources = filterResources();
+
+            if (resources.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔍</div><h3>No resources found</h3></div>`;
+                updateStats();
+                return;
+            }
+
+            const sections = {
+                curated: { title: 'Curated Problem Lists', icon: '🔥', items: [] },
+                youtube: { title: 'YouTube Channels', icon: '🎬', items: [] },
+                paid: { title: 'Paid Courses', icon: '💎', items: [] },
+                free: { title: 'Free Academic Resources', icon: '🎓', items: [] },
+                books: { title: 'Books', icon: '📕', items: [] },
+                platforms: { title: 'Practice Platforms', icon: '💻', items: [] },
+                indian: { title: 'Indian Company Resources', icon: '🇮🇳', items: [] },
+                tools: { title: 'Tools & Supplementary', icon: '🔧', items: [] }
+            };
+
+            resources.forEach(r => { if (sections[r.section]) sections[r.section].items.push(r); });
+
+            let html = '';
+            Object.entries(sections).forEach(([key, section]) => {
+                if (section.items.length === 0) return;
+                html += `
+                    <section class="resource-section" data-section="${key}">
+                        <div class="section-header">
+                            <span class="section-icon">${section.icon}</span>
+                            <h2 class="section-title">${section.title}</h2>
+                            <span class="section-count">${section.items.length} resources</span>
+                        </div>
+                        <div class="resource-grid">
+                            ${section.items.map(r => renderCard(r)).join('')}
+                        </div>
+                    </section>
+                `;
+            });
+
+            container.innerHTML = html;
+            attachCardInteractions();
+            updateStats();
+        }
+
+        function renderCard(resource) {
+            const price = resource.price || 'Free';
+            const pricingTier = getPricingTier(resource);
+            const isPaid = pricingTier === 'paid' || pricingTier === 'freemium';
+            const isSelected = selectedResource?.id === resource.id;
+
+            return `
+                 <div class="resource-card ${isSelected ? 'selected' : ''}" data-id="${resource.id}" data-section="${resource.section}" tabindex="0" role="button">
+                    <div class="card-header">
+                        <div class="card-icon">${resource.icon}</div>
+                        <div class="card-title-group">
+                            <h3 class="card-title">${resource.name}</h3>
+                            <div class="card-type">
+                                <span class="card-type-badge">${resource.type}</span>
+                                <span class="card-price ${isPaid ? 'paid' : ''}">${price}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="card-description">${resource.description}</p>
+                    <div class="card-meta">
+                        ${resource.problemCount ? `<span class="meta-tag highlight">${resource.problemCount} problems</span>` : ''}
+                        ${resource.subscribers ? `<span class="meta-tag">${resource.subscribers} subs</span>` : ''}
+                        ${resource.timeEstimate ? `<span class="meta-tag">⏱️ ${resource.timeEstimate}</span>` : ''}
+                        ${resource.pages ? `<span class="meta-tag">📄 ${resource.pages} pages</span>` : ''}
+                    </div>
+                    <div class="card-footer">
+                        ${resource.communityRating ? `<div class="card-rating">⭐ ${resource.communityRating}</div>` : '<div></div>'}
+                        <span class="card-view-btn">View Details →</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function attachCardInteractions() {
+            const container = document.getElementById('resources-container');
+            container.addEventListener('click', (e) => {
+                const card = e.target.closest('.resource-card');
+                if (!card) return;
+                selectResource(card.dataset.id, card.dataset.section);
+            });
+            container.addEventListener('keydown', (e) => {
+                const card = e.target.closest('.resource-card');
+                if (!card || (e.key !== 'Enter' && e.key !== ' ')) return;
+                e.preventDefault();
+                selectResource(card.dataset.id, card.dataset.section);
+            });
+        }
+
+        function selectResource(id, section) {
+            const dataMap = {
+                curated: resourcesData.curatedLists,
+                youtube: resourcesData.youtubeChannels,
+                paid: resourcesData.paidCourses,
+                free: resourcesData.freeAcademic,
+                books: resourcesData.books,
+                platforms: resourcesData.platforms,
+                indian: resourcesData.indianCompanies,
+                tools: resourcesData.supplementary
+            };
+
+            const resource = dataMap[section].find(r => r.id === id);
+            if (!resource) return;
+
+            selectedResource = { ...resource, section };
+            document.querySelectorAll('.resource-card').forEach(card => card.classList.toggle('selected', card.dataset.id === id));
+            populatePanel(resource);
+            document.getElementById('detail-panel').classList.add('open');
+        }
+
+        function populatePanel(resource) {
+            const price = resource.price || 'Free';
+            const isPaid = price.toLowerCase().includes('$') || price.toLowerCase().includes('paid');
+
+            document.getElementById('panel-icon').textContent = resource.icon;
+            document.getElementById('panel-name').textContent = resource.name;
+            document.getElementById('panel-type').textContent = resource.type;
+            document.getElementById('panel-price').textContent = price;
+            document.getElementById('panel-price').className = `panel-price ${isPaid ? 'paid' : ''}`;
+            document.getElementById('panel-link').href = resource.url;
+
+            let metaHtml = '';
+            if (resource.communityRating) metaHtml += `<div class="meta-card"><div class="meta-card-label">Rating</div><div class="meta-card-value rating">⭐ ${resource.communityRating}</div></div>`;
+            if (resource.timeEstimate) metaHtml += `<div class="meta-card"><div class="meta-card-label">Time</div><div class="meta-card-value time">${resource.timeEstimate}</div></div>`;
+            if (resource.problemCount) metaHtml += `<div class="meta-card"><div class="meta-card-label">Problems</div><div class="meta-card-value">${resource.problemCount}</div></div>`;
+            if (resource.difficulty) metaHtml += `<div class="meta-card"><div class="meta-card-label">Difficulty</div><div class="meta-card-value">${resource.difficulty}</div></div>`;
+            document.getElementById('panel-meta-grid').innerHTML = metaHtml || '<div style="padding: 16px; color: var(--text-muted);">No additional metrics</div>';
+
+            let overviewHtml = `<div class="panel-section"><p class="panel-description">${resource.description}</p></div>`;
+            if (resource.bestFor) overviewHtml += `<div class="panel-section"><h4 class="panel-section-title" style="font-size:0.8rem;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Best For</h4><div class="best-for-list">${resource.bestFor.map(bf => `<span class="best-for-tag">${bf}</span>`).join('')}</div></div>`;
+            document.getElementById('tab-overview').innerHTML = overviewHtml;
+
+            let detailsHtml = '';
+            if (resource.topics) detailsHtml += `<div class="panel-section"><h4 class="panel-section-title" style="font-size:0.8rem;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Topics</h4><div class="topics-list">${resource.topics.map(t => `<span class="topic-tag">${t}</span>`).join('')}</div></div>`;
+            if (resource.features) detailsHtml += `<div class="panel-section"><h4 class="panel-section-title" style="font-size:0.8rem;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Features</h4><div class="topics-list">${resource.features.map(f => `<span class="topic-tag">${f}</span>`).join('')}</div></div>`;
+            document.getElementById('tab-details').innerHTML = detailsHtml || '<p style="padding:20px;color:var(--text-muted)">No details</p>';
+
+            let compareHtml = '';
+            if (resource.pros && resource.cons) {
+                compareHtml = `<div class="panel-section"><div class="pros-cons"><div class="pros"><div class="pros-title">✓ Pros</div><ul>${resource.pros.map(p => `<li>${p}</li>`).join('')}</ul></div><div class="cons"><div class="cons-title">✗ Cons</div><ul>${resource.cons.map(c => `<li>${c}</li>`).join('')}</ul></div></div></div>`;
+            } else { compareHtml = '<p style="padding:20px;color:var(--text-muted)">No comparison data</p>'; }
+            document.getElementById('tab-compare').innerHTML = compareHtml;
+        }
+
+        document.getElementById('panel-close').addEventListener('click', () => {
+            document.getElementById('detail-panel').classList.remove('open');
+            selectedResource = null;
+            document.querySelectorAll('.resource-card').forEach(c => c.classList.remove('selected'));
+        });
+
+        document.querySelectorAll('.panel-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.hidden = true);
+                const active = document.getElementById(`tab-${tab.dataset.tab}`);
+                if (active) { active.hidden = false; active.classList.add('active'); }
+            });
+        });
+
+        // Event Listeners for Filters
+        document.getElementById('category-filter').addEventListener('change', (e) => { currentCategory = e.target.value; renderResources(); });
+        document.querySelectorAll('[data-price]').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('[data-price]').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentPrice = btn.dataset.price; renderResources(); }));
+        document.getElementById('search-input').addEventListener('input', (e) => { searchQuery = e.target.value; renderResources(); });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT') return;
+            switch (e.key.toLowerCase()) {
+                case 'g': window.location.href = 'graph.html'; break;
+                case 'p': window.location.href = 'periodic-table.html'; break;
+                case '/': e.preventDefault(); document.getElementById('search-input').focus(); break;
+                case 'escape': document.getElementById('detail-panel').classList.remove('open'); break;
+            }
+        });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+        }
+    </script>
+</body>
+
+</html>
