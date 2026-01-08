@@ -846,8 +846,11 @@
                 <p id="detail-description" class="detail-description"></p>
                 <button type="button" class="detail-open-btn" id="detail-open-full">📖 Open Full Topic Page →</button>
             </div>
-            <div class="tab-content" id="detail-companies-section" hidden>
+            <div class="tab-content" id="detail-companies-section">
                 <div class="detail-companies" id="detail-companies-list"></div>
+            </div>
+            <div class="tab-content" id="detail-related-section">
+                <!-- Populated by JS -->
             </div>
         </div>
     </div>
@@ -862,7 +865,7 @@
     <script src="js/periodic-table.js?v=25"></script>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
         }
     </script>
 </body>

@@ -1,18 +1,18 @@
 const CACHE_NAME = 'dsa-mastery-v1';
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/graph.html',
-  '/periodic-table.html',
-  '/resources.html',
-  '/topic.html',
-  '/css/styles.css',
-  '/js/app.js',
-  '/js/periodic-table.js',
-  '/data/graph_data.js',
-  '/data/periodic-table-config.js',
-  '/data/resources_data.js',
-  '/manifest.json'
+  './',
+  './index.html',
+  './graph.html',
+  './periodic-table.html',
+  './resources.html',
+  './topic.html',
+  './css/styles.css',
+  './js/app.js',
+  './js/periodic-table.js',
+  './data/graph_data.js',
+  './data/periodic-table-config.js',
+  './data/resources_data.js',
+  './manifest.json'
 ];
 
 // Install - cache static assets

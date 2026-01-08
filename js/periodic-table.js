@@ -992,7 +992,7 @@ function focusDetailCloseButton() {
 
 function setActiveDetailTab(tabName) {
     const activeTab = (tabName === 'overview' || tabName === 'companies' || tabName === 'related') ? tabName : 'overview';
-    const tabs = Array.from(document.querySelectorAll('.detail-tab'));
+    const tabs = Array.from(document.querySelectorAll('.panel-tab'));
 
     tabs.forEach(t => {
         const isActive = t.dataset.tab === activeTab;
@@ -1005,18 +1005,18 @@ function setActiveDetailTab(tabName) {
     const companies = document.getElementById('detail-companies-section');
     const related = document.getElementById('detail-related-section');
 
-    // Hide all sections first
-    if (overview) overview.setAttribute('hidden', '');
-    if (companies) companies.setAttribute('hidden', '');
-    if (related) related.setAttribute('hidden', '');
+    // Hide all sections first using class
+    if (overview) overview.classList.remove('active');
+    if (companies) companies.classList.remove('active');
+    if (related) related.classList.remove('active');
 
     // Show the active section
     if (activeTab === 'overview' && overview) {
-        overview.removeAttribute('hidden');
+        overview.classList.add('active');
     } else if (activeTab === 'companies' && companies) {
-        companies.removeAttribute('hidden');
+        companies.classList.add('active');
     } else if (activeTab === 'related' && related) {
-        related.removeAttribute('hidden');
+        related.classList.add('active');
     }
 }
 
@@ -1121,20 +1121,9 @@ detailClose?.addEventListener('click', closeDetailPanel);
 
 // Render Related tab with prerequisites and descendants
 function renderRelatedTab(node) {
-    // Create or get the related section container
+    // Get the related section container (already in HTML)
     let relatedSection = document.getElementById('detail-related-section');
-    if (!relatedSection) {
-        // Create it dynamically
-        const detailContent = document.querySelector('.detail-content');
-        if (!detailContent) return;
-
-        relatedSection = document.createElement('div');
-        relatedSection.id = 'detail-related-section';
-        relatedSection.className = 'detail-section';
-        relatedSection.setAttribute('role', 'tabpanel');
-        relatedSection.hidden = true;
-        detailContent.insertBefore(relatedSection, document.getElementById('detail-open-full'));
-    }
+    if (!relatedSection) return;
 
     const prereqs = parentMap[node.id] || [];
     const children = childMap[node.id] || [];
