@@ -897,11 +897,11 @@ function loadCollapsedState() {
             rows.forEach(r => collapsedRows.add(r));
         } else {
             // Default: all rows collapsed
-            PERIODIC_CONFIG.rows.forEach(row => collapsedRows.add(row.name));
+            Object.keys(PERIODIC_CONFIG.rows).forEach(rowName => collapsedRows.add(rowName));
         }
     } catch (e) {
         // Default: all rows collapsed
-        PERIODIC_CONFIG.rows.forEach(row => collapsedRows.add(row.name));
+        Object.keys(PERIODIC_CONFIG.rows).forEach(rowName => collapsedRows.add(rowName));
     }
 }
 
@@ -1486,6 +1486,7 @@ function showFilterBanner(label) {
 
 // Initialize
 function init() {
+    console.log('[DSA] init() called');
     if (typeof PERIODIC_CONFIG === 'undefined') {
         console.error('ERROR: PERIODIC_CONFIG not loaded!');
         return;
@@ -1503,12 +1504,15 @@ function init() {
     loadCollapsedState();
 
     allNodes = processNodes();
+    console.log('[DSA] Processed nodes:', allNodes.length);
     processedNodes = allNodes; // Store for relation lookups
 
     const groups = assignGridPositions(allNodes);
+    console.log('[DSA] Groups:', Object.keys(groups));
 
     generateLegend(allNodes);
     renderMainGrid(groups);
+    console.log('[DSA] Grid rendered');
     renderReactions();
 
     updateStats(allNodes);
