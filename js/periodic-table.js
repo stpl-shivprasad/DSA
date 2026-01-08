@@ -1227,13 +1227,13 @@ function focusTopicById(rawId, { openPanel = true } = {}) {
 }
 
 // Tab switching in detail panel
-document.querySelectorAll('.detail-tab').forEach(tab => {
+document.querySelectorAll('.panel-tab').forEach(tab => {
     tab.addEventListener('click', () => {
         setActiveDetailTab(tab.dataset.tab);
     });
 
     tab.addEventListener('keydown', (e) => {
-        const tabs = Array.from(document.querySelectorAll('.detail-tab'));
+        const tabs = Array.from(document.querySelectorAll('.panel-tab'));
         const currentIndex = tabs.indexOf(tab);
         if (currentIndex < 0) return;
 

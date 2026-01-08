@@ -206,13 +206,14 @@ select:focus-visible,
 /* Search */
 .toolbar-search,
 #search-input {
-    width: 100%;
-    padding: 10px 16px;
+    width: 180px;
+    max-width: 200px;
+    padding: 8px 12px;
     background: var(--bg-card);
     border: 1px solid rgba(97, 218, 251, 0.2);
     border-radius: 8px;
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     outline: none;
     backdrop-filter: blur(10px);
 }
