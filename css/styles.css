@@ -339,15 +339,23 @@ select:focus-visible,
 
 .tab-content {
     display: none;
-    padding: 20px;
+    padding: 16px 20px;
 }
 
 .tab-content.active {
     display: block;
 }
 
+.tab-content[hidden] {
+    display: none !important;
+}
+
+.tab-content:not([hidden]) {
+    display: block;
+}
+
 #info-panel .tab-content {
-    padding: 0;
+    padding: 16px 20px;
 }
 
 /* specific for graph view layout */
