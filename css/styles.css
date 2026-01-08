@@ -601,6 +601,43 @@ select:focus-visible,
     gap: 6px;
 }
 
+.related-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: fit-content;
+}
+
+.related-item:hover {
+    background: rgba(97, 218, 251, 0.15);
+    border-color: var(--accent-cyan);
+    transform: translateY(-2px);
+}
+
+.related-symbol {
+    font-weight: 600;
+    font-size: 0.7rem;
+}
+
+.related-name {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.related-relation {
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
 .related-chip {
     background: rgba(255, 255, 255, 0.05);
     padding: 4px 10px;
