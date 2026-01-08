@@ -4,7 +4,7 @@
  */
 
 // Generic tab switcher for any panel
-function setupPanelTabs(panelSelector = '.detail-panel, #info-panel, #detail-panel') {
+function setupPanelTabs(panelSelector = '.detail-panel, #info-panel, #detail-panel, .side-panel') {
     document.querySelectorAll(panelSelector).forEach(panel => {
         const tabs = panel.querySelectorAll('.panel-tab');
         const contents = panel.querySelectorAll('.tab-content');
@@ -59,7 +59,7 @@ function setActivePanelTab(panel, tabName) {
 }
 
 // Unified close panel function
-function closeDetailPanel(panelSelector = '.detail-panel, #info-panel, #detail-panel') {
+function closeDetailPanel(panelSelector = '.detail-panel, #info-panel, #detail-panel, .side-panel') {
     const panel = typeof panelSelector === 'string' 
         ? document.querySelector(panelSelector)
         : panelSelector;
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Bind close buttons to unified function
     document.querySelectorAll('.panel-close').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const panel = e.target.closest('.detail-panel, #info-panel, #detail-panel');
+            const panel = e.target.closest('.detail-panel, #info-panel, #detail-panel, .side-panel');
             closeDetailPanel(panel);
         });
     });
@@ -88,3 +88,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// Backward compatibility wrapper: old code calls setActivePanelTab(tabName) with just one arg
+// New code calls setActivePanelTab(panel, tabName) with two args
+// Override the function to detect which signature is being used
+const originalSetActivePanelTab = window.setActivePanelTab;
+window.setActivePanelTab = function(panelOrTabName, tabName) {
+    // If only one argument: find the open panel and use that
+    if (tabName === undefined) {
+        // panelOrTabName is actually the tabName
+        const panel = document.querySelector('.detail-panel.open, #info-panel.open, #detail-panel.open, .side-panel.open');
+        if (panel) {
+            originalSetActivePanelTab(panel, panelOrTabName);
+        }
+    } else {
+        // Two arguments: normal call
+        originalSetActivePanelTab(panelOrTabName, tabName);
+    }
+};
+
+// Also provide setActiveDetailTab as alias for backward compatibility
+window.setActiveDetailTab = window.setActivePanelTab;
